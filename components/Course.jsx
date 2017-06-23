@@ -18,7 +18,7 @@ class Course extends React.Component {
 			commentsDescription: [],
 			commentsDate: [],
 			commentsAuthor: [],
-			commentsAuthorType: []
+			commentsTypes: []
 		};
 
 		this.setStateHandler = this.setStateHandler.bind(this);
@@ -43,51 +43,16 @@ class Course extends React.Component {
 				this.setState({title});
 				axios.get('http://localhost:8080/comments/list_comments/?chapter=' + id)
 				.then(res => {
-					const commentsDescription = res.data.map(obj => obj.description);
-					this.setState({commentsDescription});
-					const commentsDate = res.data.map(obj => obj.created);
-					this.setState({commentsDate}, function() {
-						var dates = [];
-						for (var i = 0; i < this.state.commentsDate.length; i++) {
-							var date = new Date(this.state.commentsDate[i]).toISOString().slice(0, 10);
-							dates.push(date);
-						}
-						this.setState({commentsDate: dates});
-						var commentsAuthorStudent = res.data.map(obj => obj.studentId);
-						var commentsAuthorProfessor = res.data.map(obj => obj.professorId);
-						var commentsAuthor = [];
-						var commentsAuthorType = [];
-						for (var i = 0; i < commentsAuthorStudent.length; i++) {
-							if (commentsAuthorStudent[i] == -1) {
-								commentsAuthor.push(commentsAuthorProfessor[i]);
-								commentsAuthorType.push('professor');
-							} else {
-								commentsAuthor.push(commentsAuthorStudent[i]);
-								commentsAuthorType.push('student');
-							}
-						}
-						var commentsAuthorNames = [];
-						var commentsTypes = [];
-						for (var i = 0; i < commentsAuthorType.length; i++) {
-							if (commentsAuthorType[i] == 'student') {
-								axios.get('http://localhost:8080/students/' + commentsAuthor[i])
-								.then(res => {
-									commentsAuthorNames.push(res.data);
-									commentsTypes.push('student');
-									this.setState({commentsAuthor: commentsAuthorNames});
-									this.setState({commentsAuthorType: commentsTypes});
-								});
-							} else {
-								axios.get('http://localhost:8080/professors/' + commentsAuthor[i])
-								.then(res => {
-									commentsAuthorNames.push(res.data);
-									commentsTypes.push('professor');
-									this.setState({commentsAuthor: commentsAuthorNames});
-									this.setState({commentsAuthorType: commentsTypes});
-								});
-							}
-						}
-					});
+					var commentsDescription = res.data.map(obj => obj.comments.description);
+					var commentsDate = res.data.map(obj => obj.comments.created);
+					var authors = res.data.map(obj => obj.username);
+					var types = res.data.map(obj => obj.type);
+					var dates = [];
+					for (var i = 0; i < commentsDate.length; i++) {
+						var date = new Date(commentsDate[i]).toISOString().slice(0, 10);
+						dates.push(date);
+					}
+					this.setState({commentsDescription, commentsDate: dates, commentsAuthor: authors, commentsTypes: types});
 				});
 			});
 			
@@ -108,51 +73,16 @@ class Course extends React.Component {
       		});
       		axios.get('http://localhost:8080/comments/list_comments/?chapter=' + id)
 			.then(res => {
-				const commentsDescription = res.data.map(obj => obj.description);
-				this.setState({commentsDescription});
-				const commentsDate = res.data.map(obj => obj.created);
-				this.setState({commentsDate}, function() {
-					var dates = [];
-					for (var i = 0; i < this.state.commentsDate.length; i++) {
-						var date = new Date(this.state.commentsDate[i]).toISOString().slice(0, 10);
-						dates.push(date);
-					}
-					this.setState({commentsDate: dates});
-					var commentsAuthorStudent = res.data.map(obj => obj.studentId);
-					var commentsAuthorProfessor = res.data.map(obj => obj.professorId);
-					var commentsAuthor = [];
-					var commentsAuthorType = [];
-					for (var i = 0; i < commentsAuthorStudent.length; i++) {
-						if (commentsAuthorStudent[i] == -1) {
-							commentsAuthor.push(commentsAuthorProfessor[i]);
-							commentsAuthorType.push('professor');
-						} else {
-							commentsAuthor.push(commentsAuthorStudent[i]);
-							commentsAuthorType.push('student');
-						}
-					}
-					var commentsAuthorNames = [];
-					var commentsTypes = [];
-					for (var i = 0; i < commentsAuthorType.length; i++) {
-						if (commentsAuthorType[i] == 'student') {
-							axios.get('http://localhost:8080/students/' + commentsAuthor[i])
-							.then(res => {
-								commentsAuthorNames.push(res.data);
-								commentsTypes.push('student');
-								this.setState({commentsAuthor: commentsAuthorNames});
-								this.setState({commentsAuthorType: commentsTypes});
-							});
-						} else {
-							axios.get('http://localhost:8080/professors/' + commentsAuthor[i])
-							.then(res => {
-								commentsAuthorNames.push(res.data);
-								commentsTypes.push('professor');
-								this.setState({commentsAuthor: commentsAuthorNames});
-								this.setState({commentsAuthorType: commentsTypes});
-							});
-						}
-					}
-				});
+				var commentsDescription = res.data.map(obj => obj.comments.description);
+				var commentsDate = res.data.map(obj => obj.comments.created);
+				var authors = res.data.map(obj => obj.username);
+				var types = res.data.map(obj => obj.type);
+				var dates = [];
+				for (var i = 0; i < commentsDate.length; i++) {
+					var date = new Date(commentsDate[i]).toISOString().slice(0, 10);
+					dates.push(date);
+				}
+				this.setState({commentsDescription, commentsDate: dates, commentsAuthor: authors, commentsTypes: types});
 			});
       	} else {
       		window.location.href = serverName + '/login';
@@ -182,7 +112,9 @@ class Course extends React.Component {
 	         			</div>
 	         			<Chapter content = {this.state.content} title = {this.state.title} />
 			        </div>
-			        <Comments commentsDescription = {this.state.commentsDescription} commentsDate = {this.state.commentsDate} commentsAuthor = {this.state.commentsAuthor} commentsAuthorType = {this.state.commentsAuthorType} />
+			        {this.state.commentsAuthor.map((author, i) =>
+			        	<Comments key={i} commentsDescription = {this.state.commentsDescription[i]} commentsDate = {this.state.commentsDate[i]} commentsAuthor = {author} commentsAuthorType = {this.state.commentsTypes[i]} />
+			        )}
 	      		</div>
         	</div>
       	)
@@ -212,17 +144,11 @@ class Comments extends React.Component {
 
 		return (
 			<div>
-
-				{this.props.commentsAuthorType.map((type, i) =>
-					<div key={i}>
-						{type == 'student' ? (
-							<StudentComment commentsDescription = {this.props.commentsDescription[i]} commentsDate = {this.props.commentsDate[i]} commentsAuthor = {this.props.commentsAuthor[i]} />
-						) : (
-							<ProfessorComment commentsDescription = {this.props.commentsDescription[i]} commentsDate = {this.props.commentsDate[i]} commentsAuthor = {this.props.commentsAuthor[i]} />
-						)}
-					</div>
+				{this.props.commentsAuthorType == 'student' ? (
+					<StudentComment commentsDescription = {this.props.commentsDescription} commentsDate = {this.props.commentsDate} commentsAuthor = {this.props.commentsAuthor} />
+				) : (
+					<ProfessorComment commentsDescription = {this.props.commentsDescription} commentsDate = {this.props.commentsDate} commentsAuthor = {this.props.commentsAuthor} />
 				)}
-				
 			</div>
 		)
 

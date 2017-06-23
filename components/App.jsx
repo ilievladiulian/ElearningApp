@@ -27,12 +27,13 @@ class App extends React.Component {
          .then((res) => {
             console.log(res);
             cookie.remove('student', { path: '/'});
+            window.location.href = serverName + '/home';
          })
       }
       if (cookie.get('professor')) {
          cookie.remove('professor', { path: '/'});
+         window.location.href = serverName + '/home';
       }
-      // window.location.href = serverName + '/home';
    }
 
    handleState() {
