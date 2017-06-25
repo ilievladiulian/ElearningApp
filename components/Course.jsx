@@ -1,6 +1,11 @@
 import React from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import Cookies from 'universal-cookie';
+
+import Chapter from './Chapter.jsx';
+import Comments from './Comments.jsx';
+import AddComment from './AddComment.jsx';
 
 const serverName = "http://localhost:8888";
 const cookie = new Cookies();
@@ -33,14 +38,11 @@ class Course extends React.Component {
 				const id = res.data[0].id;
 				const chaptersTitle = res.data.map(obj => obj.title);
 				const chaptersId = res.data.map(obj => obj.id);
-				this.setState({chaptersTitle}, function() {
-					console.log(this.state.chaptersTitle);
-				});
-				this.setState({chaptersId}, function() {
-					console.log(this.state.chaptersId);
-				});
+				this.setState({chaptersTitle});
+				this.setState({chaptersId});
 				this.setState({content});
 				this.setState({title});
+				this.setState({id});
 				axios.get('http://localhost:8080/comments/list_comments/?chapter=' + id)
 				.then(res => {
 					var commentsDescription = res.data.map(obj => obj.comments.description);
@@ -49,7 +51,8 @@ class Course extends React.Component {
 					var types = res.data.map(obj => obj.type);
 					var dates = [];
 					for (var i = 0; i < commentsDate.length; i++) {
-						var date = new Date(commentsDate[i]).toISOString().slice(0, 10);
+						var format = 'YYYY/MM/DD HH:mm:ss';
+						var date = moment(commentsDate[i]).format(format);
 						dates.push(date);
 					}
 					this.setState({commentsDescription, commentsDate: dates, commentsAuthor: authors, commentsTypes: types});
@@ -70,6 +73,7 @@ class Course extends React.Component {
       			const id = res.data.id;
 				this.setState({content});
 				this.setState({title});
+				this.setState({id});
       		});
       		axios.get('http://localhost:8080/comments/list_comments/?chapter=' + id)
 			.then(res => {
@@ -79,7 +83,8 @@ class Course extends React.Component {
 				var types = res.data.map(obj => obj.type);
 				var dates = [];
 				for (var i = 0; i < commentsDate.length; i++) {
-					var date = new Date(commentsDate[i]).toISOString().slice(0, 10);
+					var format = 'YYYY/MM/DD HH:mm:ss';
+					var date = moment(commentsDate[i]).format(format);
 					dates.push(date);
 				}
 				this.setState({commentsDescription, commentsDate: dates, commentsAuthor: authors, commentsTypes: types});
@@ -115,78 +120,12 @@ class Course extends React.Component {
 			        {this.state.commentsAuthor.map((author, i) =>
 			        	<Comments key={i} commentsDescription = {this.state.commentsDescription[i]} commentsDate = {this.state.commentsDate[i]} commentsAuthor = {author} commentsAuthorType = {this.state.commentsTypes[i]} />
 			        )}
+		        	<AddComment authorId = {cookie.get('student') != null ? cookie.get('student').id : cookie.get('professor').id} authorType = {cookie.get('student') != null ? 'student' : 'professor'} chapterId = {this.state.id} />
 	      		</div>
         	</div>
       	)
       	
    	}
-}
-
-class Chapter extends React.Component {
-
-	render() {
-		return (
-         	<div>
-	         	<div className="container">
-	         		<div className="panel panel-success">
-	         			<div className="panel-heading text-center"><h3>{this.props.title}</h3></div>
-	         			<div className="panel-body text-justify">{this.props.content}</div>
-	         		</div>
-	      		</div>
-        	</div>
-      	)
-    }
-}
-
-class Comments extends React.Component {
-	
-	render() {
-
-		return (
-			<div>
-				{this.props.commentsAuthorType == 'student' ? (
-					<StudentComment commentsDescription = {this.props.commentsDescription} commentsDate = {this.props.commentsDate} commentsAuthor = {this.props.commentsAuthor} />
-				) : (
-					<ProfessorComment commentsDescription = {this.props.commentsDescription} commentsDate = {this.props.commentsDate} commentsAuthor = {this.props.commentsAuthor} />
-				)}
-			</div>
-		)
-
-	}
-}
-
-class StudentComment extends React.Component {
-	render() {
-		return (
-			<div>
-				<div className="panel panel-info">
-         			<div className="panel-heading">
-         				<b>{this.props.commentsAuthor}</b> commented on {this.props.commentsDate}
-         			</div>
-         			<div className="panel-body text-justify">
-         				{this.props.commentsDescription}
-         			</div>
-         		</div>
-			</div>
-		)
-	}
-}
-
-class ProfessorComment extends React.Component {
-	render() {
-		return (
-			<div>
-				<div className="panel panel-danger">
-         			<div className="panel-heading">
-         				<b>{this.props.commentsAuthor}</b> commented on {this.props.commentsDate}
-         			</div>
-         			<div className="panel-body text-justify">
-         				{this.props.commentsDescription}
-         			</div>
-         		</div>
-			</div>
-		)
-	}
 }
 
 export default Course;
