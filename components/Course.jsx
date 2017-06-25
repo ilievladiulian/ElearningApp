@@ -30,7 +30,7 @@ class Course extends React.Component {
 	}
 
 	componentWillMount() {
-		if (cookie.get('student') != null) {
+		if (cookie.get('student') != null || cookie.get('professor') != null) {
 			axios.get('http://localhost:8080/chapters/list_chapters.json?course=' + this.props.match.params.id)
 			.then(res => {
 				const content = res.data[0].content;
@@ -65,7 +65,7 @@ class Course extends React.Component {
 	}
 
 	setStateHandler(id) {
-      	if (cookie.get('student') != null) {
+      	if (cookie.get('student') != null || cookie.get('professor') != null) {
       		axios.get('http://localhost:8080/chapters/' + id)
       		.then(res => {
       			const content = res.data.content;

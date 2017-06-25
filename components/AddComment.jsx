@@ -87,13 +87,13 @@ class AddComment extends React.Component {
 						</div>
 					</div>
 				) : (
-					<div className="panel panel-succes">
+					<div className="panel panel-success">
 						<div className="panel-heading"></div>
 						<div className="panel-body">
 							<div className="form-group">
 								<textarea value={this.state.value} className="form-control" onChange={this.handleChange} placeholder="Comment..."/>
 							</div>
-							<button type="button" className="btn btn-block btn-info" onClick={this.setStateHandler}>Reply</button>
+							<button type="button" className="btn btn-block btn-success" onClick={this.setStateHandler}>Reply</button>
 						</div>
 					</div>
 				)}
