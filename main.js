@@ -6,7 +6,7 @@ import App from './components/App.jsx';
 import Home from './components/Home.jsx';
 import Login from './components/Login.jsx';
 import Contact from './components/Contact.jsx';
-import Courses from './components/Courses.jsx';
+import MyCourses from './components/MyCourses.jsx';
 import Course from './components/Course.jsx';
 import Register from './components/Register.jsx';
 
@@ -20,7 +20,7 @@ ReactDOM.render((
 			    <Route path = "/contact" component = {Contact} />
 			    <Route path = "/register" component = {Register} />
 			    <Switch>
-			    	<Route exact path = "/mycourses" component = {Courses} />
+			    	<Route exact path = "/mycourses" component = {MyCourses} />
 			    	<Route path = "/mycourses/:id" component = {Course} />
 			    </Switch>
 			</Switch>

@@ -6,3 +6,12 @@ textarea {
 	resize: vertical; 
 	min-height: 100px;
 }
+
+.clear {
+	clear:both;
+}
+
+.button-group {
+	font-size: 20px;
+    margin-top: 10px;
+}
