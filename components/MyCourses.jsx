@@ -55,6 +55,8 @@ class MyCourses extends React.Component {
 
 	editCourse(id) {
 		console.log("edit " + id);
+
+		window.location.href = window.location.href + "/edit/" + id;
 	}
 
 	deleteCourse(id) {
