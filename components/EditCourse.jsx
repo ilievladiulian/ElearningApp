@@ -84,7 +84,7 @@ class EditCourse extends React.Component {
   						<div className="form-group row">
 	  						<label htmlFor="desc" className="col-sm-2 col-form-label">Description:</label>
 	  						<div className="col-sm-8">
-	  							<textarea value={this.state.description} className="form-control" id="desc" onChange={this.handleChange} name="description"/>
+	  							<textarea value={this.state.description} className="form-control course-textarea" id="desc" onChange={this.handleChange} name="description"/>
 	  						</div>
   						</div>
   						<div className="form-group row">

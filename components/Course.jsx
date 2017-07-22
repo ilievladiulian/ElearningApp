@@ -113,10 +113,29 @@ class Course extends React.Component {
 
     editChapter(id) {
         console.log("edit " + id);
+
+        window.location.href = serverName + "/chapters/edit/" + id;
     }
 
     deleteChapter(id) {
-        console.log("delete " + id);
+        axios.delete("http://localhost:8080/chapters/" + id)
+            .then(response => {
+                if (response.data) {
+                    var ids = [];
+                    var titles = [];
+                    for (var i = 0; i < this.state.chaptersId.length; i++) {
+                        if (this.state.chaptersId[i] != id) {
+                            ids.push(this.state.chaptersId[i]);
+                            titles.push(this.state.chaptersTitle[i]);
+                        }
+                    }
+                    this.setState({chaptersId: ids, chaptersTitle: titles});
+                    this.setStateHandler(this.state.chaptersId[0]);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     render() {

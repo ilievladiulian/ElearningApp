@@ -2,9 +2,14 @@ body {
 	padding-top: 70px;
 }
 
-textarea { 
+.course-textarea {
 	resize: vertical; 
 	min-height: 100px;
+}
+
+.chapter-textarea {
+	resize: vertical;
+	min-height: 400px;
 }
 
 .clear {
@@ -14,4 +19,9 @@ textarea {
 .button-group {
 	font-size: 20px;
     margin-top: 10px;
+}
+
+.submit-form-button-wrapper {
+	margin: 0 auto;
+	float: none;
 }

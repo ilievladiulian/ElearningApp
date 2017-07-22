@@ -10,6 +10,7 @@ import MyCourses from './components/MyCourses.jsx';
 import Course from './components/Course.jsx';
 import Register from './components/Register.jsx';
 import EditCourse from './components/EditCourse.jsx';
+import EditChapter from './components/EditChapter.jsx';
 
 
 ReactDOM.render((
@@ -22,8 +23,9 @@ ReactDOM.render((
                 <Route path="/register" component={Register}/>
                 <Switch>
                     <Route exact path="/mycourses" component={MyCourses}/>
-                    <Route path="/mycourses/edit/:id" component={EditCourse}/>
-                    <Route path="/mycourses/:id" component={Course}/>
+                    <Route exact path="/mycourses/edit/:id" component={EditCourse}/>
+                    <Route exact path="/mycourses/:id" component={Course}/>
+                    <Route exact path="/chapters/edit/:chapterId" component={EditChapter}/>
                 </Switch>
             </Switch>
         </App>
